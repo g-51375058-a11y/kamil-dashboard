@@ -34,23 +34,6 @@ th{
   background:#14532d;
 }
 
-.johan, .naib, .ketiga{
-  font-weight:bold;
-}
-
-/* Hanya KEPUTUSAN KESELURUHAN ada piala */
-.johan::before{
-  content:"🏆 ";
-}
-
-.naib::before{
-  content:"🥈 ";
-}
-
-.ketiga::before{
-  content:"🥉 ";
-}
-
 </style>
 </head>
 <body>
@@ -65,7 +48,7 @@ th{
 
 <script>
 // Fungsi untuk load CSV ke dalam table
-function loadCSV(url, id, isOverall=false){
+function loadCSV(url, id){
   fetch(url)
     .then(res=>res.text())
     .then(data=>{
@@ -78,14 +61,7 @@ function loadCSV(url, id, isOverall=false){
           if(i==0){
             html += `<th>${col}</th>`
           } else {
-            let cellClass=""
-            // Hanya untuk KEPUTUSAN KESELURUHAN
-            if(isOverall){
-              if(i==1 && j==0) cellClass="johan"
-              if(i==2 && j==0) cellClass="naib"
-              if(i==3 && j==0) cellClass="ketiga"
-            }
-            html += `<td class="${cellClass}">${col}</td>`
+            html += `<td>${col}</td>`
           }
         })
         html += "</tr>"
