@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta charset="UTF-8">
 <title>KAMIL Zon Utara 2026</title>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
-
 body{
-font-family:Arial;
+font-family:Arial, sans-serif;
 background:#0b1f17;
 color:white;
 text-align:center;
@@ -19,10 +15,11 @@ text-align:center;
 h1{
 color:gold;
 font-size:40px;
+margin-bottom:30px;
 }
 
 table{
-width:80%;
+width:70%;
 margin:auto;
 border-collapse:collapse;
 margin-top:20px;
@@ -37,105 +34,66 @@ th{
 background:#14532d;
 }
 
+.johan, .naib, .ketiga{
+font-weight:bold;
+}
+
+.johan::before{
+content:"🏆 ";
+}
+
+.naib::before{
+content:"🥈 ";
+}
+
+.ketiga::before{
+content:"🥉 ";
+}
+
 </style>
-
 </head>
-
 <body>
 
 <h1>KEPUTUSAN KAMIL ZON UTARA 2026</h1>
 
 <h2>Keputusan Acara (Johan – Kelima)</h2>
-
 <table id="keputusan"></table>
 
 <h2>KEPUTUSAN KESELURUHAN</h2>
-
-<canvas id="overallChart" width="700" height="350"></canvas>
+<table id="overall"></table>
 
 <script>
-
 function loadCSV(url,id){
-
 fetch(url)
 .then(res=>res.text())
 .then(data=>{
-
 let rows=data.split("\n")
 let html=""
-
 rows.forEach((row,i)=>{
-
 let cols=row.split(",")
-
 html+="<tr>"
-
-cols.forEach(col=>{
-
+cols.forEach((col,j)=>{
 if(i==0){
 html+=`<th>${col}</th>`
 }else{
-html+=`<td>${col}</td>`
+let cellClass=""
+if(i==1 && j==0) cellClass="johan"
+if(i==2 && j==0) cellClass="naib"
+if(i==3 && j==0) cellClass="ketiga"
+html+=`<td class="${cellClass}">${col}</td>`
 }
-
 })
-
 html+="</tr>"
-
 })
-
 document.getElementById(id).innerHTML=html
-
 })
-
 }
 
+// Load Keputusan Acara
 loadCSV("https://docs.google.com/spreadsheets/d/e/2PACX-1vSocxQhTijd8XngTTNS03tPP8poS-FMnMS2Cv9p6bGNl16rBvP8vcuGUHUjNUbGI-I4t7SJezJn_ES6/pub?gid=0&single=true&output=csv","keputusan")
 
-function loadOverall(url){
-
-fetch(url)
-.then(res=>res.text())
-.then(data=>{
-
-let rows=data.split("\n").slice(1)
-
-let sekolah=[]
-let kedudukan=[]
-
-rows.forEach((row,i)=>{
-
-let col=row.split(",")
-
-kedudukan.push(col[0])
-sekolah.push(col[1])
-
-})
-
-new Chart(document.getElementById("overallChart"),{
-
-type:"bar",
-
-data:{
-labels:sekolah,
-datasets:[{
-label:"Kedudukan Keseluruhan",
-data:[8,7,6,5,4,3,2,1]
-}]
-}
-
-})
-
-})
-
-}
-
-loadOverall("https://docs.google.com/spreadsheets/d/e/2PACX-1vSocxQhTijd8XngTTNS03tPP8poS-FMnMS2Cv9p6bGNl16rBvP8vcuGUHUjNUbGI-I4t7SJezJn_ES6/pub?gid=539386349&single=true&output=csv")
-
-setInterval(function(){
-location.reload()
-},15000)
-
+// Load Keputusan Keseluruhan
+loadCSV("https://docs.google.com/spreadsheets/d/e/2PACX-1vSocxQhTijd8XngTTNS03tPP8poS-FMnMS2Cv9p6bGNl16rBvP8vcuGUHUjNUbGI-I4t7SJezJn_ES6/pub?gid=539386349&single=true&output=csv","overall")
 </script>
 
 </body>
