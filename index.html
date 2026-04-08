@@ -6,48 +6,49 @@
 
 <style>
 body{
-font-family:Arial, sans-serif;
-background:#0b1f17;
-color:white;
-text-align:center;
+  font-family:Arial, sans-serif;
+  background:#0b1f17;
+  color:white;
+  text-align:center;
 }
 
 h1{
-color:gold;
-font-size:40px;
-margin-bottom:30px;
+  color:gold;
+  font-size:40px;
+  margin-bottom:30px;
 }
 
 table{
-width:70%;
-margin:auto;
-border-collapse:collapse;
-margin-top:20px;
+  width:70%;
+  margin:auto;
+  border-collapse:collapse;
+  margin-top:20px;
 }
 
-th,td{
-padding:12px;
-border-bottom:1px solid #444;
+th, td{
+  padding:12px;
+  border-bottom:1px solid #444;
 }
 
 th{
-background:#14532d;
+  background:#14532d;
 }
 
 .johan, .naib, .ketiga{
-font-weight:bold;
+  font-weight:bold;
 }
 
+/* Hanya KEPUTUSAN KESELURUHAN ada piala */
 .johan::before{
-content:"🏆 ";
+  content:"🏆 ";
 }
 
 .naib::before{
-content:"🥈 ";
+  content:"🥈 ";
 }
 
 .ketiga::before{
-content:"🥉 ";
+  content:"🥉 ";
 }
 
 </style>
@@ -63,37 +64,41 @@ content:"🥉 ";
 <table id="overall"></table>
 
 <script>
-function loadCSV(url,id){
-fetch(url)
-.then(res=>res.text())
-.then(data=>{
-let rows=data.split("\n")
-let html=""
-rows.forEach((row,i)=>{
-let cols=row.split(",")
-html+="<tr>"
-cols.forEach((col,j)=>{
-if(i==0){
-html+=`<th>${col}</th>`
-}else{
-let cellClass=""
-if(i==1 && j==0) cellClass="johan"
-if(i==2 && j==0) cellClass="naib"
-if(i==3 && j==0) cellClass="ketiga"
-html+=`<td class="${cellClass}">${col}</td>`
-}
-})
-html+="</tr>"
-})
-document.getElementById(id).innerHTML=html
-})
+// Fungsi untuk load CSV ke dalam table
+function loadCSV(url, id, isOverall=false){
+  fetch(url)
+    .then(res=>res.text())
+    .then(data=>{
+      let rows = data.split("\n")
+      let html = ""
+      rows.forEach((row,i)=>{
+        let cols = row.split(",")
+        html += "<tr>"
+        cols.forEach((col,j)=>{
+          if(i==0){
+            html += `<th>${col}</th>`
+          } else {
+            let cellClass=""
+            // Hanya untuk KEPUTUSAN KESELURUHAN
+            if(isOverall){
+              if(i==1 && j==0) cellClass="johan"
+              if(i==2 && j==0) cellClass="naib"
+              if(i==3 && j==0) cellClass="ketiga"
+            }
+            html += `<td class="${cellClass}">${col}</td>`
+          }
+        })
+        html += "</tr>"
+      })
+      document.getElementById(id).innerHTML = html
+    })
 }
 
-// Load Keputusan Acara
-loadCSV("https://docs.google.com/spreadsheets/d/e/2PACX-1vSocxQhTijd8XngTTNS03tPP8poS-FMnMS2Cv9p6bGNl16rBvP8vcuGUHUjNUbGI-I4t7SJezJn_ES6/pub?gid=0&single=true&output=csv","keputusan")
+// Load Keputusan Acara (TIADA ikon piala)
+loadCSV("https://docs.google.com/spreadsheets/d/e/2PACX-1vSocxQhTijd8XngTTNS03tPP8poS-FMnMS2Cv9p6bGNl16rBvP8vcuGUHUjNUbGI-I4t7SJezJn_ES6/pub?gid=0&single=true&output=csv","keputusan", false)
 
-// Load Keputusan Keseluruhan
-loadCSV("https://docs.google.com/spreadsheets/d/e/2PACX-1vSocxQhTijd8XngTTNS03tPP8poS-FMnMS2Cv9p6bGNl16rBvP8vcuGUHUjNUbGI-I4t7SJezJn_ES6/pub?gid=539386349&single=true&output=csv","overall")
+// Load Keputusan Keseluruhan (ADA ikon piala untuk Johan–Ketiga)
+loadCSV("https://docs.google.com/spreadsheets/d/e/2PACX-1vSocxQhTijd8XngTTNS03tPP8poS-FMnMS2Cv9p6bGNl16rBvP8vcuGUHUjNUbGI-I4t7SJezJn_ES6/pub?gid=539386349&single=true&output=csv","overall", true)
 </script>
 
 </body>
